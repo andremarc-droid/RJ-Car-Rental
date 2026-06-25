@@ -20,6 +20,8 @@ export default function CarsPage() {
   const [seats, setSeats] = useState('');
   const [transmission, setTransmission] = useState('');
 
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
   useEffect(() => {
     const unsubCars = subscribeCars((data) => {
       setCars(data);
@@ -79,12 +81,27 @@ export default function CarsPage() {
 
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className="w-full lg:w-1/4 lg:sticky lg:top-28 h-fit bg-white border border-gray-150 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-              <h3 className="text-lg font-bold text-navy">Filters</h3>
-              <button type="button" onClick={resetFilters} className="text-xs font-semibold text-accent hover:underline">Reset All</button>
+            <div className="flex items-center justify-between pb-4 border-b border-gray-100 lg:mb-6">
+              <button
+                type="button"
+                onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+                className="flex items-center justify-between w-full lg:pointer-events-none text-left"
+              >
+                <span className="text-lg font-bold text-navy flex items-center gap-2">
+                  Filters
+                  <span className="lg:hidden text-gray-400">
+                    {isMobileFiltersOpen ? (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" /></svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                    )}
+                  </span>
+                </span>
+              </button>
+              <button type="button" onClick={resetFilters} className="text-xs font-semibold text-accent hover:underline ml-2">Reset All</button>
             </div>
 
-            <div className="space-y-6">
+            <div className={`${isMobileFiltersOpen ? 'block' : 'hidden'} lg:block mt-6 lg:mt-0 space-y-6`}>
               <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 space-y-4">
                 <label className="block text-xs font-black text-navy uppercase tracking-wider">Check Availability</label>
                 <div className="grid grid-cols-1 gap-3">
