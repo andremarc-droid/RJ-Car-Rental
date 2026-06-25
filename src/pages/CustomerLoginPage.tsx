@@ -36,8 +36,31 @@ export default function CustomerLoginPage() {
         await login(email, password);
       }
       navigate('/bookings');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Authentication failed');
+    } catch (err: any) {
+      const code = err?.code || '';
+      const message = err?.message || '';
+      let friendlyMessage = 'Authentication failed. Please try again.';
+      
+      if (code === 'auth/invalid-credential' || message.includes('auth/invalid-credential') || message.includes('invalid-credential')) {
+        friendlyMessage = 'Invalid email address or password. Please try again.';
+      } else if (code === 'auth/wrong-password' || message.includes('wrong-password')) {
+        friendlyMessage = 'Incorrect password. Please try again.';
+      } else if (code === 'auth/user-not-found' || message.includes('user-not-found')) {
+        friendlyMessage = 'No account found with this email address.';
+      } else if (code === 'auth/invalid-email' || message.includes('invalid-email')) {
+        friendlyMessage = 'Please enter a valid email address.';
+      } else if (code === 'auth/email-already-in-use' || message.includes('email-already-in-use')) {
+        friendlyMessage = 'This email address is already in use by another account.';
+      } else if (code === 'auth/weak-password' || message.includes('weak-password')) {
+        friendlyMessage = 'Weak password. Password should be at least 6 characters.';
+      } else if (code === 'auth/user-disabled' || message.includes('user-disabled')) {
+        friendlyMessage = 'This account has been disabled.';
+      } else if (code === 'auth/too-many-requests' || message.includes('too-many-requests')) {
+        friendlyMessage = 'Too many failed attempts. Please try again later.';
+      } else if (message) {
+        friendlyMessage = message;
+      }
+      setError(friendlyMessage);
     } finally {
       setSubmitting(false);
     }

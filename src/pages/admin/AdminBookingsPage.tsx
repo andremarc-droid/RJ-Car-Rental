@@ -19,7 +19,88 @@ export default function AdminBookingsPage() {
     <div className="space-y-6">
       <h2 className="font-semibold text-xl text-navy leading-tight">All Bookings</h2>
 
-      <div className="bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm">
+      {/* Mobile Card View */}
+      <div className="block lg:hidden space-y-4">
+        {bookings.length ? bookings.map((booking) => (
+          <div key={booking.id} className="bg-white border border-gray-150 rounded-2xl p-4 shadow-sm space-y-3">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="font-mono text-xs text-gray-400">#{booking.id.slice(0, 8)}</span>
+                <div className="font-bold text-navy text-sm mt-1">{booking.customer_name}</div>
+                <div className="text-xs text-gray-400">{booking.customer_email}</div>
+                <div className="text-xs text-gray-400">{booking.customer_phone}</div>
+              </div>
+              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${bookingStatusClasses(booking.status)}`}>{booking.status}</span>
+            </div>
+
+            <div className="border-t border-b border-gray-100 py-3 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-[10px] font-bold text-gray-400 uppercase">Vehicle</span>
+                <span className="text-xs font-semibold text-navy">{booking.car_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[10px] font-bold text-gray-400 uppercase">Period</span>
+                <div className="text-right">
+                  <div className="text-xs text-gray-600">{formatDisplayDate(booking.start_date)}</div>
+                  <div className="text-[10px] text-gray-400">to {formatDisplayDate(booking.end_date)}</div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-bold text-gray-400 uppercase">Total Amount</span>
+                <div className="text-right">
+                  <div className="text-sm font-bold text-navy">{formatCurrency(booking.total_price)}</div>
+                  {booking.payment_amount && (
+                    <div className="text-[9px] text-gray-400 italic">Paid: {formatCurrency(booking.payment_amount)}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Details & Receipt */}
+            <div className="flex justify-between items-center gap-4 bg-gray-50 p-2.5 rounded-xl border border-gray-150">
+              <div className="min-w-0 flex-1">
+                {booking.gcash_number ? (
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-bold text-navy">GCash: {booking.gcash_number}</div>
+                    <div className="text-[10px] text-gray-500">Ref: {booking.gcash_reference}</div>
+                    <span className="inline-block text-[9px] font-black uppercase text-accent bg-accent/10 px-1.5 py-0.5 rounded-full mt-1">
+                      {booking.payment_option === 'downpayment' ? 'Downpayment' : 'Full Payment'}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-xs text-gray-400 italic">No GCash Details</span>
+                )}
+              </div>
+              {booking.gcash_screenshot && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedScreenshot(booking.gcash_screenshot || null)}
+                  className="w-12 h-12 bg-white rounded-lg overflow-hidden border border-gray-200 block hover:opacity-85 transition-opacity shrink-0"
+                >
+                  <img src={booking.gcash_screenshot} alt="Receipt Thumbnail" className="w-full h-full object-cover" />
+                </button>
+              )}
+            </div>
+
+            {/* Change Status Dropdown */}
+            <div className="pt-1 flex items-center gap-2">
+              <span className="text-xs font-bold text-gray-400 uppercase shrink-0">Status:</span>
+              <select
+                value={booking.status}
+                onChange={(e) => handleStatusChange(booking.id, e.target.value as BookingStatus)}
+                className="premium-input bg-gray-50 text-xs py-1.5 px-3 rounded-lg flex-1"
+              >
+                {STATUSES.map((s) => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+              </select>
+            </div>
+          </div>
+        )) : (
+          <div className="py-12 text-center text-gray-400 border border-dashed border-gray-200 rounded-2xl bg-white">No bookings have been made yet.</div>
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden lg:block bg-white border border-gray-150 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-gray-50 border-b border-gray-150">
@@ -75,7 +156,7 @@ export default function AdminBookingsPage() {
                       <button
                         type="button"
                         onClick={() => setSelectedScreenshot(booking.gcash_screenshot || null)}
-                        className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 block hover:opacity-80 transition-opacity"
+                        className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 block hover:opacity-85 transition-opacity"
                       >
                         <img src={booking.gcash_screenshot} alt="Receipt Thumbnail" className="w-full h-full object-cover" />
                       </button>

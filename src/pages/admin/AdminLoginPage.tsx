@@ -44,8 +44,27 @@ export default function AdminLoginPage() {
       }
 
       navigate('/admin/dashboard');
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'These credentials do not match our records.');
+    } catch (e: any) {
+      const code = e?.code || '';
+      const message = e?.message || '';
+      let friendlyMessage = 'These credentials do not match our records.';
+      
+      if (code === 'auth/invalid-credential' || message.includes('auth/invalid-credential') || message.includes('invalid-credential')) {
+        friendlyMessage = 'Invalid email address or password. Please try again.';
+      } else if (code === 'auth/wrong-password' || message.includes('wrong-password')) {
+        friendlyMessage = 'Incorrect password. Please try again.';
+      } else if (code === 'auth/user-not-found' || message.includes('user-not-found')) {
+        friendlyMessage = 'No admin account found with this email address.';
+      } else if (code === 'auth/invalid-email' || message.includes('invalid-email')) {
+        friendlyMessage = 'Please enter a valid email address.';
+      } else if (code === 'auth/user-disabled' || message.includes('user-disabled')) {
+        friendlyMessage = 'This admin account has been disabled.';
+      } else if (code === 'auth/too-many-requests' || message.includes('too-many-requests')) {
+        friendlyMessage = 'Too many failed login attempts. Please try again later.';
+      } else if (message) {
+        friendlyMessage = message;
+      }
+      setError(friendlyMessage);
     } finally {
       setSubmitting(false);
     }
