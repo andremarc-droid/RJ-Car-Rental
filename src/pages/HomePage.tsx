@@ -1,20 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { subscribeCars } from '../services/firestore';
 import { subscribeWebsiteReviews, addWebsiteReviewWithEmail, hashEmail, checkEmailAlreadyReviewed } from '../services/chatReviews';
 import { auth, sendSignInLinkToEmail } from '../lib/firebase';
 import type { Car, Review } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import { CAR_CATEGORIES } from '../types';
-import { formatCurrency, getCarImageUrl, todayString } from '../utils';
+import { formatCurrency, getCarImageUrl } from '../utils';
 
 export default function HomePage() {
-  const navigate = useNavigate();
   const [featuredCars, setFeaturedCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
-  const [pickupDate, setPickupDate] = useState('');
-  const [returnDate, setReturnDate] = useState('');
-  const [category, setCategory] = useState('');
 
   // ── Review form state ────────────────────────────────────────────────────────
   // Step: 'email' | 'link_sent' | 'verified' | 'submitted' | 'already_reviewed'
@@ -59,14 +54,7 @@ export default function HomePage() {
     };
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (pickupDate) params.set('start_date', pickupDate);
-    if (returnDate) params.set('end_date', returnDate);
-    if (category) params.set('category', category);
-    navigate(`/cars?${params.toString()}`);
-  };
+
 
   /** Step 1 — send a magic-link to the given email */
   const handleSendVerificationLink = async (e: React.FormEvent) => {
