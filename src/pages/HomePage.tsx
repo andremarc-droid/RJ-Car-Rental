@@ -189,13 +189,37 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
-              { title: '1. Choose a Car', desc: 'Filter and select from our diverse category of vehicles to match your specific plans.' },
-              { title: '2. Book Online', desc: 'Pick reservation dates, fill out details, and pay securely in seconds.' },
-              { title: '3. Drive Away', desc: 'Collect your keys, complete check-in, and embark on your journey!' },
+              {
+                title: '1. Choose a Car',
+                desc: 'Filter and select from our diverse category of vehicles to match your specific plans.',
+                icon: (
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                )
+              },
+              {
+                title: '2. Book Online',
+                desc: 'Pick reservation dates, fill out details, and pay securely in seconds.',
+                icon: (
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                )
+              },
+              {
+                title: '3. Drive Away',
+                desc: 'Collect your keys, complete check-in, and embark on your journey!',
+                icon: (
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m-2-2a2 2 0 00-2 2m2-2V5a2 2 0 012-2h2a2 2 0 012 2v3a2 2 0 01-2 2h-1.658a1 1 0 00-.707.293l-5.586 5.586a1 1 0 01-.707.293h-1.586a1 1 0 01-.707-.293l-1.586-1.586a1 1 0 01-.293-.707v-1.586a1 1 0 01.293-.707L13.586 7.707A1 1 0 0014.293 7H15z" />
+                  </svg>
+                )
+              },
             ].map((step) => (
               <div key={step.title} className="text-center space-y-4">
                 <div className="mx-auto w-16 h-16 rounded-2xl bg-navy/5 flex items-center justify-center text-navy">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  {step.icon}
                 </div>
                 <h3 className="text-xl font-bold text-navy">{step.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">{step.desc}</p>
