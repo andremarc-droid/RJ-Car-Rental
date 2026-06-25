@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #1e3a5f;
+  --color-navy-dark: #152943;
+  --color-accent: #f97316;
+  --color-accent-dark: #e0620d;
+  --color-surface: #f8fafc;
+  --color-gray-150: #e8edf2;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-gray-800 font-sans antialiased;
+  }
+}
+
+@layer components {
+  .premium-input {
+    @apply w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-800 outline-none transition-all duration-200 focus:border-navy focus:ring-2 focus:ring-navy/20;
+  }
+}
